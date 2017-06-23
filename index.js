@@ -51,7 +51,7 @@
             if(opts["show-function"]) {
                 return qname + 'function(){}';
             }
-            return "";
+            return null;
         } else if(Array.isArray(obj)) {
             parents.push(obj);
             names.push(name);
