@@ -29,7 +29,7 @@
                 qname = name = "";
             }
         } else {
-            qname = JSON.stringify(name) + ": ";
+            qname = JSON.stringify(name) + ":";
         }
         var indent = "";
         if(space != null) {
@@ -96,7 +96,7 @@
                 return qname + "[" + lengthDesc + "]";
             }
             if(space == null) {
-                return qname + "[" + lengthDesc + lines.join(", ") + "]";
+                return qname + "[" + lengthDesc + lines.join(",") + "]";
             }
             return qname + "[" + lengthDesc + "\n"
                 + lines.join(",\n") + "\n" + indent + "]";
@@ -151,7 +151,7 @@
                 return qname + "{" + lengthDesc + "}";
             }
             if(space == null) {
-                return qname + "{" + lengthDesc + lines.join(", ") + "}";
+                return qname + "{" + lengthDesc + lines.join(",") + "}";
             }
             return qname + "{" + lengthDesc + "\n"
                 + lines.join(",\n") + "\n" + indent + "}";
