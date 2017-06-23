@@ -58,8 +58,10 @@
             var lines = [];
             obj.forEach(function(value, i) {
                 if(typeof(value) == "function") {
-                    if(!opts["show-function"]) {
-                        return;
+                    if(opts["show-function"]) {
+                        value = "function(){}";
+                    } else {
+                        value = null;
                     }
                 }
                 var recursive = false;
