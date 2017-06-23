@@ -1,6 +1,6 @@
 (function() {
     "use strict";
-    const JSON_stringify = require("../lib/index.js");
+    const JSON_stringify = require("../index.js");
     JSON_stringify.setOption({
         "eliminate-undefined": false,
         "eliminate-recursive": false,

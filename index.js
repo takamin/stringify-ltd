@@ -20,6 +20,25 @@
         parents = parents || [];
         names = names || [];
         var qname = "";
+        var getRecursiveOpt = function(recursive, opts) {
+            var opt = {
+                "recursive": recursive,
+                "eliminate": opts["eliminate-undefined"]
+            };
+            if(opts["eliminate-recursive"] && opt.recursive) {
+                opt.eliminate = true;
+            }
+            return opt;
+        };
+        if(name == null && replacer && typeof(replacer) == 'function') {
+            var opt = getRecursiveOpt(false, opts);
+            // This replacer call seems like to cause context problem.
+            // Auto boxing?
+            obj = replacer.call(obj, "", obj, opt);
+            if(typeof(obj) === "undefined") {
+                return;
+            }
+        }
         if(name == null) {
             qname = "";
         } else if(typeof(name) == 'number') {
@@ -29,7 +48,7 @@
                 qname = name = "";
             }
         } else {
-            qname = JSON.stringify(name) + ": ";
+            qname = JSON.stringify(name) + ":";
         }
         var indent = "";
         if(space != null) {
@@ -51,15 +70,17 @@
             if(opts["show-function"]) {
                 return qname + 'function(){}';
             }
-            return "";
+            return null;
         } else if(Array.isArray(obj)) {
             parents.push(obj);
             names.push(name);
             var lines = [];
             obj.forEach(function(value, i) {
                 if(typeof(value) == "function") {
-                    if(!opts["show-function"]) {
-                        return;
+                    if(opts["show-function"]) {
+                        value = "function(){}";
+                    } else {
+                        value = null;
                     }
                 }
                 var recursive = false;
@@ -67,13 +88,7 @@
                     recursive = (searchRecursiveRef(value, parents, names) != null);
                 }
                 var eliminate = false;
-                var opt = {
-                    "recursive": recursive,
-                    "eliminate": opts["eliminate-undefined"]
-                };
-                if(opts["eliminate-recursive"] && opt.recursive) {
-                    opt.eliminate = true;
-                }
+                var opt = getRecursiveOpt(recursive, opts);
                 if(replacer) {
                     if(typeof(replacer) == 'function') {
                         value = replacer.call(obj, i, value, opt);
@@ -96,7 +111,7 @@
                 return qname + "[" + lengthDesc + "]";
             }
             if(space == null) {
-                return qname + "[" + lengthDesc + lines.join(", ") + "]";
+                return qname + "[" + lengthDesc + lines.join(",") + "]";
             }
             return qname + "[" + lengthDesc + "\n"
                 + lines.join(",\n") + "\n" + indent + "]";
@@ -120,13 +135,7 @@
                     recursive = (searchRecursiveRef(value, parents, names) != null);
                 }
                 var eliminate = false;
-                var opt = {
-                    "recursive": recursive,
-                    "eliminate": opts["eliminate-undefined"]
-                };
-                if(opts["eliminate-recursive"] && opt.recursive) {
-                    opt.eliminate = true;
-                }
+                var opt = getRecursiveOpt(recursive, opts);
                 if(replacer) {
                     if(typeof(replacer) == 'function') {
                         value = replacer.call(obj, key, value, opt); 
@@ -151,7 +160,7 @@
                 return qname + "{" + lengthDesc + "}";
             }
             if(space == null) {
-                return qname + "{" + lengthDesc + lines.join(", ") + "}";
+                return qname + "{" + lengthDesc + lines.join(",") + "}";
             }
             return qname + "{" + lengthDesc + "\n"
                 + lines.join(",\n") + "\n" + indent + "}";
