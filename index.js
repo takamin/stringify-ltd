@@ -20,6 +20,25 @@
         parents = parents || [];
         names = names || [];
         var qname = "";
+        var getRecursiveOpt = function(recursive, opts) {
+            var opt = {
+                "recursive": recursive,
+                "eliminate": opts["eliminate-undefined"]
+            };
+            if(opts["eliminate-recursive"] && opt.recursive) {
+                opt.eliminate = true;
+            }
+            return opt;
+        };
+        if(name == null && replacer && typeof(replacer) == 'function') {
+            var opt = getRecursiveOpt(false, opts);
+            // This replacer call seems like to cause context problem.
+            // Auto boxing?
+            obj = replacer.call(obj, "", obj, opt);
+            if(typeof(obj) === "undefined") {
+                return;
+            }
+        }
         if(name == null) {
             qname = "";
         } else if(typeof(name) == 'number') {
@@ -69,13 +88,7 @@
                     recursive = (searchRecursiveRef(value, parents, names) != null);
                 }
                 var eliminate = false;
-                var opt = {
-                    "recursive": recursive,
-                    "eliminate": opts["eliminate-undefined"]
-                };
-                if(opts["eliminate-recursive"] && opt.recursive) {
-                    opt.eliminate = true;
-                }
+                var opt = getRecursiveOpt(recursive, opts);
                 if(replacer) {
                     if(typeof(replacer) == 'function') {
                         value = replacer.call(obj, i, value, opt);
@@ -122,13 +135,7 @@
                     recursive = (searchRecursiveRef(value, parents, names) != null);
                 }
                 var eliminate = false;
-                var opt = {
-                    "recursive": recursive,
-                    "eliminate": opts["eliminate-undefined"]
-                };
-                if(opts["eliminate-recursive"] && opt.recursive) {
-                    opt.eliminate = true;
-                }
+                var opt = getRecursiveOpt(recursive, opts);
                 if(replacer) {
                     if(typeof(replacer) == 'function') {
                         value = replacer.call(obj, key, value, opt); 
