@@ -1,6 +1,6 @@
 (function() {
     "use strict";
-    const JSON_stringify = require("../lib/index.js");
+    const JSON_stringify = require("../index.js");
     var obj = new Function("return this")();
     var replacer = function(key, value) {
         var keyBlackList = ["GLOBAL", "global", "parent", "root", "owner"];

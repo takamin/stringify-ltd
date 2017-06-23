@@ -1,6 +1,6 @@
 (function() {
     "use strict";
-    const JSON_stringify = require("../lib/index.js").setOption({
+    const JSON_stringify = require("../index.js").setOption({
         "show-length" : true,
     });;
     var obj = new Function("return this")();

@@ -2,7 +2,7 @@
   "name": "yea-stringify",
   "version": "1.0.0",
   "description": "Yet Another JSON.stringify with some additional features.",
-  "main": "lib/index.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
